@@ -139,7 +139,7 @@ void fill_reward(){
 
 			//for face card
 				if(dealer_sum==11){
-					ans+= p_face*(1);
+					ans+= p_face*(-1);
 				}
 				else{
 					ans+= p_face*expected_reward[i][dealer_sum-2];					
@@ -289,19 +289,21 @@ void initialize_v(){
 }
 
 double values(int cat, int sum, int dcard){
+	int index1;
+	int index2;
 	if(cat==1){
-		int index1= dcard-2;
-		int index2= sum-5;
+		index1= dcard-2;
+		index2= sum-5;
 		return v[index1][index2];
 	}
 	else if(cat==2){
-		int index1= dcard-2;
-		int index2= psum-2 + 17;
+		index1= dcard-2;
+		index2= psum-2 + 17;
 		return v[index1][index2];
 	}
 	else{
-		int index1= dcard-2;
-		int index2= psum-2 + 25;
+		index1= dcard-2;
+		index2= psum-2 + 25;
 		return v[index1][index2];	
 	}
 }
@@ -330,17 +332,56 @@ void value_iteration(){
 				// HIT REWARD
 					//ace
 					if(psum+11>21){
-						hit_reward+= p_noface*value(1, psum+1, dealercard);
+						if(psum+1>21) hit_reward+= p_noface*(-1);
+						else hit_reward+= p_noface*value(1, psum+1, dealercard);
 					}
 					else{
 						hit_reward+= p_noface*value(2, psum, dealercard);
 					}
 					//normal card
-					
-					
+					for(int k=2;k<=9;k++){
+						if(psum+k>21){
+							hit_reward+= p_noface*(-1);
+						}
+						else{
+							hit_reward+= p_noface*value(1, psum+k, dealercard);
+						}	
+					}
 					//face card
+					if(psum+10>21){
+						hit_reward+= p_face*(-1);						
+					}
+					else{
+						hit_reward+= p_face*value(1, psum+k, dealercard);
+					}
 
 				// DOUBLE REWARD
+					//ace
+					if(psum+11>21){
+						if(psum+1>21) double_reward+= p_noface*(-1);
+						else{
+							double_reward+= p_noface*2*(find_reward(psum+1, dealercard, isFace, isAce));
+						}
+					}
+					else{
+						double_reward+= p_noface*2*(find_reward(psum+11, dealercard, isFace, isAce));						
+					}
+					//normal card
+					for(int k=2;k<=9;k++){
+						if(psum+k>21){
+							double_reward+= p_noface*(-1);
+						}
+						else{
+							double_reward+= p_noface*2*find_reward(psum+k, dealercard, isFace, isAce);
+						}	
+					}
+					//face card
+					if(psum+10>21){
+						double_reward+= p_face*(-1);						
+					}
+					else{
+						double_reward+= p_face*2*find_reward(psum+10, dealercard, isFace, isAce);
+					}
 			}
 			// One Ace
 			else if(category==2){
@@ -353,7 +394,6 @@ void value_iteration(){
 
 		}
 	}
-
 }
 
 // void find_policy(){
