@@ -288,54 +288,73 @@ void initialize_v(){
 	}
 }
 
-// void value_iteration(){
-// 	for(int i=0;i<10;i++){
-// 		// 11 for ACE
-// 		int dealercard=i+2;
-// 		for(int j=0;j<35;j++){
-// 			int category=0;
-// 			if(j>=0 && j<=16)category=1;
-// 			else if(j>=17 && j<=24)category=2;
-// 			else category=3;
-// 			// Normal Sum
-// 			if(category==1){
-// 				int psum=j+5;
-// 				double double_reward=0;
-// 				double stand_reward=0;
-// 				double hit_reward=0;
-// 				bool isAce=false;
-// 				bool isFace=false;
-// 				if(i==8) isFace=true;
-// 				if(i==9) isAce=true;
-// 				// STAND REWARD
-// 					stand_reward=find_reward(psum, dealercard, isFace, isAce);
-// 				// HIT REWARD
-// 					//ace
-// 					if(psum+11>21){
-// 						hit_reward+= p_noface*value()
-// 					}
-// 					else{
+double values(int cat, int sum, int dcard){
+	if(cat==1){
+		int index1= dcard-2;
+		int index2= sum-5;
+		return v[index1][index2];
+	}
+	else if(cat==2){
+		int index1= dcard-2;
+		int index2= psum-2 + 17;
+		return v[index1][index2];
+	}
+	else{
+		int index1= dcard-2;
+		int index2= psum-2 + 25;
+		return v[index1][index2];	
+	}
+}
 
-// 					}
-// 					//normal card
+void value_iteration(){
+	for(int i=0;i<10;i++){
+		// 11 for ACE
+		int dealercard=i+2;
+		for(int j=0;j<35;j++){
+			int category=0;
+			if(j>=0 && j<=16)category=1;
+			else if(j>=17 && j<=24)category=2;
+			else category=3;
+			// Normal Sum
+			if(category==1){
+				int psum=j+5;
+				double double_reward=0;
+				double stand_reward=0;
+				double hit_reward=0;
+				bool isAce=false;
+				bool isFace=false;
+				if(i==8) isFace=true;
+				if(i==9) isAce=true;
+				// STAND REWARD
+					stand_reward=find_reward(psum, dealercard, isFace, isAce);
+				// HIT REWARD
+					//ace
+					if(psum+11>21){
+						hit_reward+= p_noface*value(1, psum+1, dealercard);
+					}
+					else{
+						hit_reward+= p_noface*value(2, psum, dealercard);
+					}
+					//normal card
 					
-// 					//face card
+					
+					//face card
 
-// 				// DOUBLE REWARD
-// 			}
-// 			// One Ace
-// 			else if(category==2){
+				// DOUBLE REWARD
+			}
+			// One Ace
+			else if(category==2){
 
-// 			}
-// 			//Pair
-// 			else{
+			}
+			//Pair
+			else{
 
-// 			}
+			}
 
-// 		}
-// 	}
+		}
+	}
 
-// }
+}
 
 // void find_policy(){
 
