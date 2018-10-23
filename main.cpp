@@ -726,11 +726,41 @@ double value_iteration(){
 	return max_change;
 }
 
+char move(int a){
+	if(a==1) return 'H';
+	else if(a==2) return 'S';
+	else if(a==3) return 'D';
+	else if(a==4) return 'P';
+}
 
 void write_policy(){
-	
+	for(int i=0;i<15;i++){
+		cout << i+5 << "\t";
+		for(int j=0;j<10;j++){
+			cout << move(policy[j][i]) << " ";
+		}
+		cout << endl;
+	}
+	for(int i=0;i<8;i++){
+		cout << "A" << i+2 << "\t";
+		for(int j=0;j<10;j++){
+			cout << move(policy[j][i+17]) << " ";
+		}
+		cout << endl;
+	}
+	for(int i=0;i<9;i++){
+		cout << i+2<< i+2 << "\t";
+		for(int j=0;j<10;j++){
+			cout << move(policy[j][i+256]) << " ";
+		}
+		cout << endl;
+	}
 
-
+		cout << "AA"<<  "\t";
+		for(int j=0;j<10;j++){
+			cout << move(policy[j][35]) << " ";
+		}
+		cout << endl;
 
 }
 
@@ -763,21 +793,21 @@ int main(int argc, char const *argv[]){
 	// 	cout << endl;
 	// }
 	initialize_v();
-	for(int i=0;i<10;i++){
-		cout << i << ": ";
-		for(int j=0;j<33;j++){
-			cout << v[i][j] << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
-	cout << endl;
-	cout << endl;
+	// for(int i=0;i<10;i++){
+	// 	cout << i << ": ";
+	// 	for(int j=0;j<33;j++){
+	// 		cout << v[i][j] << " ";
+	// 	}
+	// 	cout << endl;
+	// }
+	// cout << endl;
+	// cout << endl;
+	// cout << endl;
 
 	//repeat
-	// for(int i=0;i<20;i++){
-	// 	cout <<"Max change iteration" <<value_iteration() << endl;
-	// }
+	for(int i=0;i<20;i++){
+		cout <<"Max change iteration" <<value_iteration() << endl;
+	}
 	
 	// for(int i=0;i<10;i++){
 	// 	cout << i << ": ";
