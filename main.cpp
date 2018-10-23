@@ -10,7 +10,7 @@ struct state{
 	bool dealerAce;
 };
 
-double v[10][35];
+double v[10][36];
 double expected_reward[19][21];
 double p_face;
 double p_noface;
@@ -22,6 +22,7 @@ void initialize_reward(){
 		}
 	}
 }
+
 void fill_reward(){
 	for(int i=0;i<18;i++){
 		int player_sum=i+4;
@@ -31,7 +32,10 @@ void fill_reward(){
 			int dealer_sum=j+2;
 			//for normal card
 			for(int k=2;k<=9;k++){
-				if(dealer_sum+k>17){
+				if(dealer_sum+k>21){
+					ans+= p_noface*(1);
+				}
+				else if(dealer_sum+k>=17){
 					if(dealer_sum+k>player_sum){
 						ans+= p_noface*(-1);
 					}
@@ -86,7 +90,7 @@ void fill_reward(){
 					}
 				}
 				else{
-					ans+= p_face*expected_reward[i][dealer_sum+(1-2)];
+					ans+= p_noface*expected_reward[i][dealer_sum+(1-2)];
 				}
 			}
 			else{
@@ -113,7 +117,11 @@ void fill_reward(){
 			int dealer_sum=j-4;
 			//for normal cards
 			for(int k=2;k<=9;k++){
-				if(dealer_sum+k>=17){
+				if(dealer_sum+k>21){
+					//ans+= p_noface*(1);
+					ans+= p_noface*(expected_reward[i][dealer_sum+k-12]);
+				}
+				else if(dealer_sum+k>=17){
 					if(dealer_sum+k>player_sum){
 						ans+= p_noface*(-1);
 					}
@@ -159,7 +167,10 @@ void fill_reward(){
 			int dealer_sum=j+2;
 			//for normal card
 			for(int k=2;k<=9;k++){
-				if(dealer_sum+k>17){
+				if(dealer_sum+k>21){
+					ans+= p_noface*(-1);					
+				}
+				else if(dealer_sum+k>=	17){
 					if(dealer_sum+k>player_sum){
 						ans+= p_noface*(-1);
 					}
@@ -214,7 +225,7 @@ void fill_reward(){
 					}
 				}
 				else{
-					ans+= p_face*expected_reward[i][dealer_sum+(1-2)];
+					ans+= p_noface*expected_reward[i][dealer_sum+(1-2)];
 				}
 			}
 			else{
@@ -244,6 +255,7 @@ void fill_reward(){
 	}
 	expected_reward[18][8]+=p_noface*(-1);
 }
+
 double find_reward(int playersum, int dealersum, bool dealerface, bool dealerAce){
 	if(playersum!=21){
 		if(dealerAce) return expected_reward[playersum-4][15];
@@ -264,7 +276,7 @@ double find_reward(int playersum, int dealersum, bool dealerface, bool dealerAce
 
 void initialize_v(){
 	for(int i=0;i<10;i++){
-		for(int j=0;j<33;j++){
+		for(int j=0;j<36;j++){
 			int rand1= 1+rand()%5;
 			int rand2= rand()%2;
 			double rand_val= 0.5+ (1.0/rand1);
@@ -276,43 +288,54 @@ void initialize_v(){
 	}
 }
 
+// void value_iteration(){
+// 	for(int i=0;i<10;i++){
+// 		// 11 for ACE
+// 		int dealercard=i+2;
+// 		for(int j=0;j<35;j++){
+// 			int category=0;
+// 			if(j>=0 && j<=16)category=1;
+// 			else if(j>=17 && j<=24)category=2;
+// 			else category=3;
+// 			// Normal Sum
+// 			if(category==1){
+// 				int psum=j+5;
+// 				double double_reward=0;
+// 				double stand_reward=0;
+// 				double hit_reward=0;
+// 				bool isAce=false;
+// 				bool isFace=false;
+// 				if(i==8) isFace=true;
+// 				if(i==9) isAce=true;
+// 				// STAND REWARD
+// 					stand_reward=find_reward(psum, dealercard, isFace, isAce);
+// 				// HIT REWARD
+// 					//ace
+// 					if(psum+11>21){
+// 						hit_reward+= p_noface*value()
+// 					}
+// 					else{
 
+// 					}
+// 					//normal card
+					
+// 					//face card
 
-void value_iteration(){
-	for(int i=0;i<10;i++){
-		// 11 for ACE
-		int dealercard=i+2;
-		for(int j=0;j<35;j++){
-			int category=0;
-			if(j>=0 && j<=16)category=1;
-			else if(j>=17 && j<=24)category=2;
-			else category=3;
-			// Normal Sum
-			if(category==1){
-				int psum=j+5;
-				double double_reward=0;
-				double stand_reward=0;
-				double hit_reward=0;
-				bool isAce=false;
-				bool isFace=false;
-				if(i==8) isFace=true;
-				if(i==9) isAce=true;
-				// STAND REWARD
-				stand_reward=find_reward(psum, dealercard, isFace, isAce);
-				// HIT REWARD
-				// DOUBLE REWARD
-			}
-			else if(category==2){
+// 				// DOUBLE REWARD
+// 			}
+// 			// One Ace
+// 			else if(category==2){
 
-			}
-			else{
+// 			}
+// 			//Pair
+// 			else{
 
-			}
+// 			}
 
-		}
-	}
+// 		}
+// 	}
 
-}
+// }
 
 // void find_policy(){
 
@@ -327,15 +350,29 @@ int main(int argc, char const *argv[]){
 	p_face= atof(argv[1]);
 	p_noface= (1-p_face)/9.0;
 	
-	initialize_reward();
+	// initialize_reward();
 	fill_reward();
-	// for(int i=0;i<19;i++){
-	// 	cout << i+4 << ": ";
-	// 	for(int j=0;j<21;j++){
-	// 		cout << expected_reward[i][j] << " ";
-	// 	}
-	// 	cout << endl;
-	// }
+	for(int i=0;i<19;i++){
+		cout << i+4 << ": ";
+		for(int j=0;j<9;j++){
+			cout << expected_reward[i][j] << " ";
+		}
+		cout << expected_reward[i][15];
+		cout << endl;
+	}
+
+		cout << endl;
+
+		cout << endl;
+
+	for(int i=0;i<19;i++){
+		cout << i+4 << ": ";
+		for(int j=0;j<21;j++){
+			cout << expected_reward[i][j] << " ";
+		}
+		// cout << expected_reward[i][15];
+		cout << endl;
+	}
 	initialize_v();
 	// for(int i=0;i<10;i++){
 	// 	cout << i << ": ";
