@@ -285,9 +285,9 @@ void fill_reward(){
 	
 	// Second Last row for both blackjack
 	for(int i=0;i<21;i++){
-		expected_reward[19][i]=expected_reward[18][i];
+		expected_reward[19][i]=(1.5)*expected_reward[18][i];
 	}
-	expected_reward[19][8]+=p_noface*(-1);
+	expected_reward[19][8]+=(1.5)*p_noface*(-1);
 
 	// Last row for dealer's blackjack
 	for(int i=0;i<21;i++){
@@ -1186,8 +1186,6 @@ double value_iteration_nodouble(){
 	return max_change;
 }
 
-
-
 void write_policy(){
 	for(int i=0;i<15;i++){
 		cout << i+5 << "\t";
@@ -1267,14 +1265,32 @@ int main(int argc, char const *argv[]){
 	// cout << endl;
 
 	//repeat
-	for(int i=0;i<20;i++){
-		// cout <<"Max change iteration" <<value_iteration_nodouble() << endl;
-		value_iteration_nodouble();
-	}
+	// for(int i=0;i<20;i++){
+	// 	cout <<"Max change iteration" <<value_iteration_nodouble() << endl;
+	// 	value_iteration_nodouble();
+	// }
 	
-	for(int i=0;i<20;i++){
-		// cout <<"Max change iteration" <<value_iteration() << endl;
-		value_iteration();
+	while(1){
+		double changing = value_iteration_nodouble();
+		if(changing<0.000000000001){
+			// cout << changing << endl;
+			break;
+		}
+	}
+
+
+	// for(int i=0;i<20;i++){
+	// 	// cout <<"Max change iteration" <<value_iteration() << endl;
+	// 	value_iteration();
+	// }
+
+
+	while(1){
+		double changing = value_iteration();
+		if(changing<0.000000000001){
+			// cout << changing << endl;
+			break;
+		}
 	}
 	// for(int i=0;i<10;i++){
 	// 	cout << i << ": ";
