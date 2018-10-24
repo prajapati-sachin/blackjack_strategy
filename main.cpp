@@ -751,7 +751,7 @@ void write_policy(){
 	for(int i=0;i<9;i++){
 		cout << i+2<< i+2 << "\t";
 		for(int j=0;j<10;j++){
-			cout << move(policy[j][i+256]) << " ";
+			cout << move(policy[j][i+26]) << " ";
 		}
 		cout << endl;
 	}
@@ -806,7 +806,8 @@ int main(int argc, char const *argv[]){
 
 	//repeat
 	for(int i=0;i<20;i++){
-		cout <<"Max change iteration" <<value_iteration() << endl;
+		// cout <<"Max change iteration" <<value_iteration() << endl;
+		value_iteration();
 	}
 	
 	// for(int i=0;i<10;i++){
