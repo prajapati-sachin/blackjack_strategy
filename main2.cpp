@@ -694,7 +694,7 @@ double value_iteration(){
 					//ace
 					if(psum+11>21){
 						if(psum+1>21) hit_reward+= p_noface*(-1);
-						else hit_reward+= p_noface*value_nodouble(1, psum+1, dealercard);
+						else hit_reward+= p_noface*value_nodouble(2, 2, dealercard);
 					}
 					else{
 						hit_reward+= p_noface*value_nodouble(2, psum, dealercard);
@@ -705,7 +705,7 @@ double value_iteration(){
 							hit_reward+= p_noface*(-1);
 						}
 						else{
-							hit_reward+= p_noface*value_nodouble(1, psum+k, dealercard);
+							hit_reward+= p_noface*value_nodouble(2, k+1, dealercard);
 						}	
 					}
 					//face card
