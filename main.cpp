@@ -348,7 +348,7 @@ double value(int cat, int sum, int dcard){
 	}
 	else{
 		index1= dcard-2;
-		index2= sum-2 + 25;
+		index2= sum-2 + 26;
 		return v[index1][index2];	
 	}
 }
@@ -443,7 +443,6 @@ double value_iteration(){
 				else{
 					polic[j]=2;
 				}
-
 			}
 			// One Ace
 			else if(category==2){
@@ -598,7 +597,8 @@ double value_iteration(){
 					}
 					//normal cards
 					for(int k=2;k<=9;k++){
-						split_reward+=p_noface*value(1, card+k, dealercard);	
+						if(card==k) split_reward+=p_noface*value(3, card, dealercard);
+						else split_reward+=p_noface*value(1, card+k, dealercard);	
 					}
 					//face
 					split_reward+=p_face*value(1, card+10, dealercard);
@@ -737,28 +737,35 @@ void write_policy(){
 	for(int i=0;i<15;i++){
 		cout << i+5 << "\t";
 		for(int j=0;j<10;j++){
-			cout << move(policy[j][i]) << " ";
+			cout << move(policy[j][i]); 
+			if(j!=9) cout << " ";
+				
 		}
 		cout << endl;
 	}
 	for(int i=0;i<8;i++){
 		cout << "A" << i+2 << "\t";
 		for(int j=0;j<10;j++){
-			cout << move(policy[j][i+17]) << " ";
+			cout << move(policy[j][i+17]) ;
+			if(j!=9) cout << " ";
+
 		}
 		cout << endl;
 	}
 	for(int i=0;i<9;i++){
 		cout << i+2<< i+2 << "\t";
 		for(int j=0;j<10;j++){
-			cout << move(policy[j][i+26]) << " ";
+			cout << move(policy[j][i+26]) ;
+			if(j!=9) cout << " ";
+
 		}
 		cout << endl;
 	}
 
 		cout << "AA"<<  "\t";
 		for(int j=0;j<10;j++){
-			cout << move(policy[j][35]) << " ";
+			cout << move(policy[j][35]);
+			if(j!=9) cout << " ";
 		}
 		cout << endl;
 
