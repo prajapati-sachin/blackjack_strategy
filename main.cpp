@@ -19,6 +19,13 @@ int policy[10][36];
 double expected_reward[21][21];
 double p_face;
 double p_noface;
+char move(int a){
+	if(a==1) return 'H';
+	else if(a==2) return 'S';
+	else if(a==3) return 'D';
+	else if(a==4) return 'P';
+}
+
 
 void initialize_reward(){
 	for(int i=0;i<19;i++){
@@ -346,7 +353,7 @@ double value(int cat, int sum, int dcard){
 		index2= sum-2 + 17;
 		return v[index1][index2];
 	}
-	else{
+	else if(cat==3){
 		index1= dcard-2;
 		index2= sum-2 + 26;
 		return v[index1][index2];	
@@ -407,7 +414,7 @@ double value_iteration(){
 				// DOUBLE REWARD
 					//ace
 					if(psum+11>21){
-						if(psum+1>21) double_reward+= p_noface*(-1);
+						if(psum+1>21) double_reward+= 2*p_noface*(-1);
 						else{
 							double_reward+= p_noface*2*(find_reward(psum+1, dealercard, isFace, isAce, false));
 						}
@@ -418,7 +425,7 @@ double value_iteration(){
 					//normal card
 					for(int k=2;k<=9;k++){
 						if(psum+k>21){
-							double_reward+= p_noface*(-1);
+							double_reward+= 2*p_noface*(-1);
 						}
 						else{
 							double_reward+= p_noface*2*find_reward(psum+k, dealercard, isFace, isAce, false);
@@ -426,7 +433,7 @@ double value_iteration(){
 					}
 					//face card
 					if(psum+10>21){
-						double_reward+= p_face*(-1);						
+						double_reward+= 2*p_face*(-1);						
 					}
 					else{
 						double_reward+= p_face*2*find_reward(psum+10, dealercard, isFace, isAce, false);
@@ -434,15 +441,25 @@ double value_iteration(){
 
 				//update V value
 				Vn[j]= max(stand_reward, max(double_reward, hit_reward));
-				if(Vn[j]==hit_reward){
-					polic[j]=1;
-				}
-				else if(Vn[j]==double_reward){
+				if(Vn[j]==double_reward){
 					polic[j]=3;
 				}
-				else{
+				else if(Vn[j]==hit_reward){
+					polic[j]=1;
+				}
+				else if(Vn[j]==stand_reward){
 					polic[j]=2;
 				}
+				
+				// if(i==1 && j==4){
+				// 	cout << "Policy: "<< move(polic[j]) << endl;
+				// 	cout << "Value: " << Vn[j] << endl;
+				// 	cout << "double_reward: " << double_reward << endl;
+				// 	cout << "stand_reward: " << stand_reward << endl;
+				// 	cout << "hit_reward: " << hit_reward << endl;
+				// 	cout << "-----------------------------------" << endl;
+				// }
+
 			}
 			// One Ace
 			else if(category==2){
@@ -508,15 +525,24 @@ double value_iteration(){
 
 				//update V value
 				Vn[j]= max(stand_reward, max(double_reward, hit_reward));
-				if(Vn[j]==hit_reward){
-					polic[j]=1;
-				}
-				else if(Vn[j]==double_reward){
+				if(Vn[j]==double_reward){
 					polic[j]=3;
 				}
-				else{
+				else if(Vn[j]==hit_reward){
+					polic[j]=1;
+				}
+				else if(Vn[j]==stand_reward){
 					polic[j]=2;
 				}
+
+				// if(i==3 && j==18){
+				// 	cout << "Policy: "<< move(polic[j]) << endl;
+				// 	cout << "Value: " << Vn[j] << endl;
+				// 	cout << "double_reward: " << double_reward << endl;
+				// 	cout << "stand_reward: " << stand_reward << endl;
+				// 	cout << "hit_reward: " << hit_reward << endl;
+				// 	cout << "-----------------------------------" << endl;
+				// }				
 			}
 			//Pair
 			else if(category==3){
@@ -560,7 +586,7 @@ double value_iteration(){
 				// DOUBLE REWARD
 					//ace
 					if(psum+11>21){
-						if(psum+1>21) double_reward+= p_noface*(-1);
+						if(psum+1>21) double_reward+= 2*p_noface*(-1);
 						else{
 							double_reward+= p_noface*2*(find_reward(psum+1, dealercard, isFace, isAce, false));
 						}
@@ -571,7 +597,7 @@ double value_iteration(){
 					//normal card
 					for(int k=2;k<=9;k++){
 						if(psum+k>21){
-							double_reward+= p_noface*(-1);
+							double_reward+= 2*p_noface*(-1);
 						}
 						else{
 							double_reward+= p_noface*2*find_reward(psum+k, dealercard, isFace, isAce, false);
@@ -579,7 +605,7 @@ double value_iteration(){
 					}
 					//face card
 					if(psum+10>21){
-						double_reward+= p_face*(-1);						
+						double_reward+= 2*p_face*(-1);						
 					}
 					else{
 						double_reward+= p_face*2*find_reward(psum+10, dealercard, isFace, isAce, false);
@@ -605,17 +631,28 @@ double value_iteration(){
 					split_reward*=2;
 				//update V value
 				Vn[j]= max(split_reward, max(stand_reward, max(double_reward, hit_reward)));
-				if(Vn[j]==hit_reward){
-					polic[j]=1;
-				}
-				else if(Vn[j]==double_reward){
+				if(Vn[j]==double_reward){
 					polic[j]=3;
 				}
+				else if(Vn[j]==hit_reward){
+					polic[j]=1;
+				}
+				else if(Vn[j]==stand_reward){
+					polic[j]=2;
+				}
+				
 				else if(Vn[j]==split_reward){
 					polic[j]=4;
-				}
-				else{
-					polic[j]=2;
+				}				
+				
+				if(i==3 && j==28){
+					cout << "Policy: "<< move(polic[j]) << endl;
+					cout << "Value: " << Vn[j] << endl;
+					cout << "double_reward: " << double_reward << endl;
+					cout << "stand_reward: " << stand_reward << endl;
+					cout << "hit_reward: " << hit_reward << endl;
+					cout << "split_reward: " << split_reward << endl;
+					cout << "-----------------------------------" << endl;
 				}
 			}
 			//Pair of ACE
@@ -661,7 +698,7 @@ double value_iteration(){
 				// DOUBLE REWARD
 					//ace
 					if(psum+11>21){
-						if(psum+1>21) double_reward+= p_noface*(-1);
+						if(psum+1>21) double_reward+= 2*p_noface*(-1);
 						else{
 							double_reward+= p_noface*2*(find_reward(psum+1, dealercard, isFace, isAce, false));
 						}
@@ -672,7 +709,7 @@ double value_iteration(){
 					//normal card
 					for(int k=2;k<=9;k++){
 						if(psum+k>21){
-							double_reward+= p_noface*(-1);
+							double_reward+= 2*p_noface*(-1);
 						}
 						else{
 							double_reward+= p_noface*2*find_reward(psum+k, dealercard, isFace, isAce, false);
@@ -698,22 +735,24 @@ double value_iteration(){
 					split_reward*=2;
 				//update V value
 				Vn[j]= max(split_reward, max(stand_reward, max(double_reward, hit_reward)));
-				if(Vn[j]==hit_reward){
-					polic[j]=1;
-				}
-				else if(Vn[j]==double_reward){
+				if(Vn[j]==double_reward){
 					polic[j]=3;
 				}
-				else if(Vn[j]==split_reward){
-					polic[j]=4;
+				else if(Vn[j]==hit_reward){
+					polic[j]=1;
 				}
-				else{
+				else if(Vn[j]==stand_reward){
 					polic[j]=2;
 				}
+				
+				else if(Vn[j]==split_reward){
+					polic[j]=4;
+				}				
 			}
-
+			
+			
 		}
-	//update v
+		//update v
 		for(int m=0;m<36;m++){
 			double update= abs(Vn[m]-v[i][m]);
 			if(update>max_change){
@@ -722,16 +761,13 @@ double value_iteration(){
 			v[i][m]=Vn[m];
 			policy[i][m]=polic[m];	
 		}
+		
 	}
+
+
 	return max_change;
 }
 
-char move(int a){
-	if(a==1) return 'H';
-	else if(a==2) return 'S';
-	else if(a==3) return 'D';
-	else if(a==4) return 'P';
-}
 
 void write_policy(){
 	for(int i=0;i<15;i++){
